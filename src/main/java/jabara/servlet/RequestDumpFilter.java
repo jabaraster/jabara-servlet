@@ -55,9 +55,9 @@ public class RequestDumpFilter implements Filter {
             return;
         }
 
-        _logger.trace("-------------- " + request.getRequestURI()); //$NON-NLS-1$
+        _logger.trace("-------------- " + request.getRequestURI() + "(Request)"); //$NON-NLS-1$ //$NON-NLS-2$
         dumpCookie(request);
-        dumpHeaders(request);
+        dumpRequestHeaders(request);
         dumpRequestParameter(request);
 
         pChain.doFilter(pRequest, pResponse);
@@ -81,7 +81,7 @@ public class RequestDumpFilter implements Filter {
         }
     }
 
-    private static void dumpHeaders(final HttpServletRequest pRequest) {
+    private static void dumpRequestHeaders(final HttpServletRequest pRequest) {
         _logger.trace("  -- Request headers"); //$NON-NLS-1$
         for (final Enumeration<String> headerNames = pRequest.getHeaderNames(); headerNames.hasMoreElements();) {
             final String headerName = headerNames.nextElement();
