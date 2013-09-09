@@ -55,7 +55,8 @@ public class RequestDumpFilter implements Filter {
             return;
         }
 
-        _logger.trace("-------------- " + request.getRequestURI() + "(Request)"); //$NON-NLS-1$ //$NON-NLS-2$
+        _logger.trace("-------------- " + request.getRequestURI() + "(Request)(" + request.getMethod() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        dumpQueryString(request);
         dumpCookie(request);
         dumpRequestHeaders(request);
         dumpRequestParameter(request);
@@ -81,6 +82,11 @@ public class RequestDumpFilter implements Filter {
         }
     }
 
+    private static void dumpQueryString(final HttpServletRequest pRequest) {
+        _logger.trace("  -- QueryString"); //$NON-NLS-1$
+        _logger.trace("    " + pRequest.getQueryString()); //$NON-NLS-1$
+    }
+
     private static void dumpRequestHeaders(final HttpServletRequest pRequest) {
         _logger.trace("  -- Request headers"); //$NON-NLS-1$
         for (final Enumeration<String> headerNames = pRequest.getHeaderNames(); headerNames.hasMoreElements();) {
@@ -91,8 +97,13 @@ public class RequestDumpFilter implements Filter {
 
     private static void dumpRequestParameter(final HttpServletRequest pRequest) {
         _logger.trace("  -- Request Parameters"); //$NON-NLS-1$
-        for (final Map.Entry<String, String[]> parameter : pRequest.getParameterMap().entrySet()) {
-            _logger.trace("    " + parameter.getKey() + ": " + Arrays.asList(parameter.getValue())); //$NON-NLS-1$//$NON-NLS-2$
+
+        if (ServletUtil.isMultipartRequest(pRequest)) {
+            _logger.trace("    Multipart Request!"); //$NON-NLS-1$
+        } else {
+            for (final Map.Entry<String, String[]> parameter : pRequest.getParameterMap().entrySet()) {
+                _logger.trace("    " + parameter.getKey() + ": " + Arrays.asList(parameter.getValue())); //$NON-NLS-1$//$NON-NLS-2$
+            }
         }
     }
 
