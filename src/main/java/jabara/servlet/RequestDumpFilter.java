@@ -61,6 +61,10 @@ public class RequestDumpFilter implements Filter {
         dumpRequestHeaders(request);
         dumpRequestParameter(request);
 
+        if (ServletUtil.isMultipartRequest(request)) {
+            // s(request);
+        }
+
         pChain.doFilter(pRequest, pResponse);
     }
 
